@@ -32,8 +32,10 @@
     <module>org.openhab.binding.cm11a</module>
     <module>org.openhab.binding.coolmasternet</module>
     <module>org.openhab.binding.daikin</module>
+    <module>org.openhab.binding.darksky</module>
     <module>org.openhab.binding.deconz</module>
     <module>org.openhab.binding.denonmarantz</module>
+    <module>org.openhab.binding.digiplex</module>
     <module>org.openhab.binding.digitalstrom</module>
     <module>org.openhab.binding.dlinksmarthome</module>
     <module>org.openhab.binding.dmx</module>
@@ -51,10 +53,12 @@
     <module>org.openhab.binding.gpstracker</module>
     <module>org.openhab.binding.harmonyhub</module>
     <module>org.openhab.binding.hdanywhere</module>
+    <module>org.openhab.binding.hdpowerview</module>
     <module>org.openhab.binding.helios</module>
     <module>org.openhab.binding.homematic</module>
     <module>org.openhab.binding.hyperion</module>
     <module>org.openhab.binding.icloud</module>
+    <module>org.openhab.binding.ipp</module>
     <module>org.openhab.binding.irtrans</module>
     <module>org.openhab.binding.jeelink</module>
     <module>org.openhab.binding.keba</module>
@@ -63,11 +67,14 @@
     <module>org.openhab.binding.knx</module>
     <module>org.openhab.binding.kodi</module>
     <module>org.openhab.binding.konnected</module>
+    <module>org.openhab.binding.kostalinverter</module>
+    <module>org.openhab.binding.lametrictime</module>
     <module>org.openhab.binding.leapmotion</module>
     <module>org.openhab.binding.lgtvserial</module>
     <module>org.openhab.binding.lifx</module>
     <module>org.openhab.binding.lirc</module>
     <module>org.openhab.binding.lutron</module>
+    <module>org.openhab.binding.mcp23017</module>
     <module>org.openhab.binding.meteoblue</module>
     <module>org.openhab.binding.meteostick</module>
     <module>org.openhab.binding.miele</module>
@@ -78,6 +85,7 @@
     <module>org.openhab.binding.mqtt.generic</module>
     <module>org.openhab.binding.mqtt.homeassistant</module>
     <module>org.openhab.binding.mqtt.homie</module>
+    <module>org.openhab.binding.nanoleaf</module>
     <module>org.openhab.binding.nest</module>
     <module>org.openhab.binding.network</module>
     <module>org.openhab.binding.nibeheatpump</module>
@@ -86,6 +94,7 @@
     <module>org.openhab.binding.oceanic</module>
     <module>org.openhab.binding.onebusaway</module>
     <module>org.openhab.binding.onewire</module>
+    <module>org.openhab.binding.opensprinkler</module>
     <module>org.openhab.binding.openuv</module>
     <module>org.openhab.binding.openweathermap</module>
     <module>org.openhab.binding.pentair</module>
@@ -106,9 +115,11 @@
     <module>org.openhab.binding.sensebox</module>
     <module>org.openhab.binding.serialbutton</module>
     <module>org.openhab.binding.silvercrestwifisocket</module>
+    <module>org.openhab.binding.sleepiq</module>
     <module>org.openhab.binding.smaenergymeter</module>
     <module>org.openhab.binding.solaredge</module>
     <module>org.openhab.binding.solarlog</module>
+    <module>org.openhab.binding.somfytahoma</module>
     <module>org.openhab.binding.sonos</module>
     <module>org.openhab.binding.sonyaudio</module>
     <module>org.openhab.binding.spotify</module>
@@ -131,8 +142,12 @@
     <module>org.openhab.binding.yeelight</module>
     <module>org.openhab.extensionservice.marketplace</module>
     <module>org.openhab.extensionservice.marketplace.automation</module>
+    <module>org.openhab.io.imperihome</module>
+    <module>org.openhab.io.javasound</module>
     <module>org.openhab.io.mqttembeddedbroker</module>
+    <module>org.openhab.io.webaudio</module>
     <module>org.openhab.persistence.mapdb</module>
+    <module>org.openhab.transform.bin2json</module>
     <module>org.openhab.transform.exec</module>
     <module>org.openhab.transform.javascript</module>
     <module>org.openhab.transform.jsonpath</module>
@@ -143,6 +158,7 @@
     <module>org.openhab.transform.xslt</module>
     <module>org.openhab.voice.googletts</module>
     <module>org.openhab.voice.mactts</module>
+    <module>org.openhab.voice.marytts</module>
     <module>org.openhab.voice.picotts</module>
     <module>org.openhab.voice.voicerss</module>
   </modules>
