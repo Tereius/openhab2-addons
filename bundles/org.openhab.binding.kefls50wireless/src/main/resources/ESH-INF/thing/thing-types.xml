@@ -4,29 +4,31 @@
 	xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
 	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
 
-	<!-- Sample Thing Type -->
-	<thing-type id="sample">
-		<label>KefLS50Wireless Binding Thing</label>
-		<description>Sample thing for KefLS50Wireless Binding</description>
+	<thing-type id="loudspeaker">
+	
+		<label>KefLS50Wireless Loudspeaker Binding</label>
+		<description>Controls the volume and audio input of KEFs LS50 Wireless</description>
+		<category>Speaker</category>
 
 		<channels>
-			<channel id="channel1" typeId="sample-channel" />
+			<channel id="volume" typeId="system.volume" />
+			<channel id="mute" typeId="system.mute" />
+			<channel id="input" typeId="input" />
 		</channels>
 
 		<config-description>
-			<parameter name="config1" type="text" required="true">
-				<label>Sample parameter</label>
-				<description>This is a sample text configuration parameter.</description>
+			<parameter name="host" type="text" required="true">
+				<label>Host</label>
+				<description>The hostname or IP address of the loudspeaker</description>
 			</parameter>
 		</config-description>
-
+		
 	</thing-type>
-
-	<!-- Sample Channel Type -->
-	<channel-type id="sample-channel">
-		<item-type>kefls50wirelessItem</item-type>
-		<label>KefLS50Wireless Binding Channel</label>
-		<description>Sample channel for KefLS50Wireless Binding</description>
+	
+	<channel-type id="input">
+		<item-type>String</item-type>
+		<label>Audio input</label>
+		<description>The label/name of the current audio input</description>
 	</channel-type>
 
 </thing:thing-descriptions>
