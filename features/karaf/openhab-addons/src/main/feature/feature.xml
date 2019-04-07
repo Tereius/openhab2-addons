@@ -278,7 +278,14 @@
 
     <feature name="openhab-binding-groheondus" description="GROHE ONDUS Binding" version="${project.version}">
         <feature>openhab-runtime-base</feature>
-        <bundle start-level="80">mvn:org.openhab.binding/org.openhab.binding.groheondus/${project.version}</bundle>
+        <feature prerequisite="true">wrap</feature>
+        <bundle dependency="true">wrap:mvn:com.fasterxml.jackson.core/jackson-core/2.9.6</bundle>
+        <bundle dependency="true">wrap:mvn:com.fasterxml.jackson.core/jackson-annotations/2.9.6</bundle>
+        <bundle dependency="true">wrap:mvn:com.fasterxml.jackson.core/jackson-databind/2.9.6</bundle>
+		<bundle dependency="true">mvn:org.apache.httpcomponents/httpcore-osgi/4.4.9</bundle>
+        <bundle dependency="true">mvn:org.apache.httpcomponents/httpclient-osgi/4.5.5</bundle>
+		<bundle dependency="true">wrap:mvn:org.grohe/ondus-api/0.0.9</bundle>
+        <bundle start-level="80">mvn:org.openhab.addons.bundles/org.openhab.binding.groheondus/${project.version}</bundle>
     </feature>
 
     <feature name="openhab-binding-harmonyhub" description="Harmony Hub Binding" version="${project.version}">
@@ -313,7 +320,7 @@
     <feature name="openhab-binding-hue" description="Hue Binding" version="${project.version}">
         <feature>openhab-runtime-base</feature>
         <feature>openhab-transport-upnp</feature>
-        <bundle start-level="80">mvn:org.openhab.binding/org.openhab.binding.hue/${project.version}</bundle>
+        <bundle start-level="80">mvn:org.openhab.addons.bundles/org.openhab.binding.hue/${project.version}</bundle>
     </feature>
 
     <feature name="openhab-binding-hdanywhere" description="HDAnywhere Binding" version="${project.version}">
@@ -450,7 +457,7 @@
 
     <feature name="openhab-binding-logreader" description="Log Reader Binding" version="${project.version}">
         <feature>openhab-runtime-base</feature>
-        <bundle start-level="80">mvn:org.openhab.binding/org.openhab.binding.logreader/${project.version}</bundle>
+        <bundle start-level="80">mvn:org.openhab.addons.bundles/org.openhab.binding.logreader/${project.version}</bundle>
     </feature>
 
     <feature name="openhab-binding-loxone" description="Loxone Binding" version="${project.version}">
@@ -467,7 +474,7 @@
 
     <feature name="openhab-binding-max" description="MAX! Binding" version="${project.version}">
         <feature>openhab-runtime-base</feature>
-        <bundle start-level="80">mvn:org.openhab.binding/org.openhab.binding.max/${project.version}</bundle>
+        <bundle start-level="80">mvn:org.openhab.addons.bundles/org.openhab.binding.max/${project.version}</bundle>
     </feature>
 
     <feature name="openhab-binding-mcp23017" description="MCP23017 Binding" version="${project.version}">
@@ -514,7 +521,10 @@
     <feature name="openhab-binding-minecraft" description="Minecraft Binding" version="${project.version}">
         <feature>openhab-runtime-base</feature>
         <feature>openhab-transport-mdns</feature>
-        <bundle start-level="80">mvn:org.openhab.binding/org.openhab.binding.minecraft/${project.version}</bundle>
+        <feature prerequisite="true">wrap</feature>
+        <bundle dependency="true">mvn:io.reactivex/rxjava/1.1.7</bundle>
+        <bundle dependency="true">wrap:mvn:com.firebase/tubesock/0.0.1$Bundle-Name=TubeSock&amp;Bundle-SymbolicName=com.firebase.tubesock&amp;Bundle-Version=0.0.1</bundle>
+        <bundle start-level="80">mvn:org.openhab.addons.bundles/org.openhab.binding.minecraft/${project.version}</bundle>
     </feature>
 
     <feature name="openhab-binding-modbus" description="Modbus Binding" version="${project.version}">
@@ -540,12 +550,12 @@
 
     <feature name="openhab-binding-neato" description="Neato Binding" version="${project.version}">
         <feature>openhab-runtime-base</feature>
-        <bundle start-level="80">mvn:org.openhab.binding/org.openhab.binding.neato/${project.version}</bundle>
+        <bundle start-level="80">mvn:org.openhab.addons.bundles/org.openhab.binding.neato/${project.version}</bundle>
     </feature>
 
     <feature name="openhab-binding-neeo" description="NEEO Binding" version="${project.version}">
         <feature>openhab-runtime-base</feature>
-        <bundle start-level="80">mvn:org.openhab.binding/org.openhab.binding.neeo/${project.version}</bundle>
+        <bundle start-level="80">mvn:org.openhab.addons.bundles/org.openhab.binding.neeo/${project.version}</bundle>
     </feature>
 
     <feature name="openhab-binding-nest" description="Nest Binding" version="${project.version}">
@@ -582,7 +592,7 @@
 
     <feature name="openhab-binding-ntp" description="NTP Binding" version="${project.version}">
         <feature>openhab-runtime-base</feature>
-        <bundle start-level="80">mvn:org.openhab.binding/org.openhab.binding.ntp/${project.version}</bundle>
+        <bundle start-level="80">mvn:org.openhab.addons.bundles/org.openhab.binding.ntp/${project.version}</bundle>
     </feature>
 
     <feature name="openhab-binding-nuki" description="Nuki Binding" version="${project.version}">
@@ -821,7 +831,7 @@
 
     <feature name="openhab-binding-tado" description="Tado Binding" version="${project.version}">
         <feature>openhab-runtime-base</feature>
-        <bundle start-level="80">mvn:org.openhab.binding/org.openhab.binding.tado/${project.version}</bundle>
+        <bundle start-level="80">mvn:org.openhab.addons.bundles/org.openhab.binding.tado/${project.version}</bundle>
     </feature>
 
     <feature name="openhab-binding-tankerkoenig" description="Tankerkoenig Binding" version="${project.version}">
@@ -898,7 +908,7 @@
     <feature name="openhab-binding-wemo" description="Wemo Binding" version="${project.version}">
         <feature>openhab-runtime-base</feature>
         <feature>openhab-transport-upnp</feature>
-        <bundle start-level="80">mvn:org.openhab.binding/org.openhab.binding.wemo/${project.version}</bundle>
+        <bundle start-level="80">mvn:org.openhab.addons.bundles/org.openhab.binding.wemo/${project.version}</bundle>
     </feature>
 
     <feature name="openhab-binding-wifiled" description="WiFi LED Binding" version="${project.version}">
@@ -1012,7 +1022,7 @@
 
     <feature name="openhab-misc-neeo" description="NEEO Integration" version="${project.version}">
         <feature>openhab-runtime-base</feature>
-        <bundle start-level="80">mvn:org.openhab.io/org.openhab.io.neeo/${project.version}</bundle>
+        <bundle start-level="80">mvn:org.openhab.addons.bundles/org.openhab.io.neeo/${project.version}</bundle>
     </feature>
 
     <feature name="openhab-misc-ruleengine" description="Rule Engine (Experimental)" version="${project.version}">
@@ -1046,7 +1056,18 @@
 
     <feature name="openhab-transformation-jinja" description="Jinja Transformation" version="${project.version}">
         <feature>openhab-runtime-base</feature>
-        <bundle start-level="75">mvn:org.openhab.transform/org.openhab.transform.jinja/${project.version}</bundle>
+        <feature prerequisite="true">wrap</feature>
+        <bundle dependency="true">mvn:com.fasterxml.jackson.core/jackson-core/2.9.8</bundle>
+        <bundle dependency="true">mvn:com.fasterxml.jackson.core/jackson-databind/2.9.8</bundle>
+        <bundle dependency="true">mvn:com.fasterxml.jackson.core/jackson-annotations/2.9.8</bundle>
+        <bundle dependency="true">mvn:com.google.guava/guava/20.0</bundle>
+        <bundle dependency="true">mvn:ch.obermuhlner/big-math/2.1.0</bundle>
+        <bundle dependency="true">mvn:org.jsoup/jsoup/1.8.3</bundle>
+        <bundle dependency="true">wrap:mvn:com.google.re2j/re2j/1.2$Bundle-Name=re2j&amp;Bundle-SymbolicName=com.google.re2j.re2j&amp;Bundle-Version=1.2</bundle>
+        <bundle dependency="true">wrap:mvn:de.odysseus.juel/juel-api/2.2.7$Bundle-Name=juel&amp;Bundle-SymbolicName=de.odysseus.juel.juel-api&amp;Bundle-Version=2.2.7</bundle>
+        <bundle dependency="true">wrap:mvn:de.odysseus.juel/juel-impl/2.2.7$Bundle-Name=juel&amp;Bundle-SymbolicName=de.odysseus.juel.juel-impl&amp;Bundle-Version=2.2.7</bundle>
+        <bundle dependency="true">wrap:mvn:com.hubspot.jinjava/jinjava/2.5.0$Bundle-Name=jinjava&amp;Bundle-SymbolicName=com.hubspot.jinjava.jinjava&amp;Bundle-Version=2.5.0</bundle>
+        <bundle start-level="75">mvn:org.openhab.addons.bundles/org.openhab.transform.jinja/${project.version}</bundle>
     </feature>
 
     <feature name="openhab-transformation-jsonpath" description="JSONPath Transformation" version="${project.version}">
