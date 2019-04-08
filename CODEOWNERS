@@ -42,7 +42,6 @@
 /addons/binding/org.openhab.binding.yamahareceiver/ @davidgraeff @zarusz
 /addons/binding/org.openhab.binding.yamahareceiver.test/ @davidgraeff @zarusz
 /addons/binding/org.openhab.binding.zoneminder/ @Mr-Eskildsen
-/addons/binding/org.openhab.binding.zway/ @pathec
 /addons/io/org.openhab.io.azureiothub/ @nikotanghe
 /addons/io/org.openhab.io.homekit/ @beowulfe
 /addons/io/org.openhab.io.hueemulation/ @davidgraeff @digitaldan
@@ -134,6 +133,7 @@
 /bundles/org.openhab.binding.neato/ @jjlauterbach
 /bundles/org.openhab.binding.neeo/ @tmrobert8
 /bundles/org.openhab.binding.nest/ @wborn
+/bundles/org.openhab.binding.netatmo/ @clinique @cweitkamp @lolodomo
 /bundles/org.openhab.binding.network/ @davidgraeff @mettke
 /bundles/org.openhab.binding.nibeheatpump/ @paulianttila
 /bundles/org.openhab.binding.nibeuplink/ @alexf2015
@@ -190,6 +190,7 @@
 /bundles/org.openhab.binding.wifiled/ @rvt @xylo
 /bundles/org.openhab.binding.windcentrale/ @marcelrv
 /bundles/org.openhab.binding.yeelight/ @claell
+/bundles/org.openhab.binding.zway/ @pathec
 /bundles/org.openhab.extensionservice.marketplace/ @kaikreuzer
 /bundles/org.openhab.extensionservice.marketplace.automation/ @kaikreuzer
 /bundles/org.openhab.io.imperihome/ @pdegeus

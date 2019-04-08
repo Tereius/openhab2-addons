@@ -135,11 +135,11 @@
     <feature name="openhab-binding-denonmarantz" description="DenonMarantz Binding" version="${project.version}">
         <feature>openhab-runtime-base</feature>
         <feature>openhab-transport-mdns</feature>
-        <!-- JAXB bundles -->
-        <bundle dependency="true">mvn:javax.xml.bind/jaxb-api/2.3.1</bundle>
-        <bundle dependency="true">mvn:com.sun.xml.bind/jaxb-impl/2.3.2</bundle>
-        <bundle dependency="true">mvn:com.sun.xml.bind/jaxb-core/2.3.0</bundle>
-
+        <feature prerequisite="true">wrap</feature>
+        <bundle dependency="true">wrap:mvn:javax.activation/activation/1.1.1$Bundle-Name=Javax%20Activation&amp;Bundle-SymbolicName=javax.activation.activation&amp;Bundle-Version=1.1.1</bundle>
+        <bundle dependency="true">mvn:javax.xml.bind/jaxb-api/2.2.12</bundle>
+        <bundle dependency="true">mvn:com.sun.xml.bind/jaxb-impl/2.2.11</bundle>
+        <bundle dependency="true">mvn:com.sun.xml.bind/jaxb-core/2.2.11</bundle>
         <bundle start-level="80">mvn:org.openhab.addons.bundles/org.openhab.binding.denonmarantz/${project.version}</bundle>
     </feature>
 
@@ -167,12 +167,13 @@
         <feature>openhab-transport-mdns</feature>
         <feature prerequisite="true">wrap</feature>
         <!-- JAXB bundles -->
-        <bundle dependency="true">mvn:javax.xml.bind/jaxb-api/2.3.1</bundle>
-        <bundle dependency="true">mvn:com.sun.xml.bind/jaxb-impl/2.3.2</bundle>
-        <bundle dependency="true">mvn:com.sun.xml.bind/jaxb-core/2.3.0</bundle>
+        <bundle dependency="true">wrap:mvn:javax.activation/activation/1.1.1$Bundle-Name=Javax%20Activation&amp;Bundle-SymbolicName=javax.activation.activation&amp;Bundle-Version=1.1.1</bundle>
+        <bundle dependency="true">mvn:javax.xml.bind/jaxb-api/2.2.12</bundle>
+        <bundle dependency="true">mvn:com.sun.xml.bind/jaxb-impl/2.2.11</bundle>
+        <bundle dependency="true">mvn:com.sun.xml.bind/jaxb-core/2.2.11</bundle>
         <!-- JAX-WS (SOAP) bundles -->
         <bundle dependency="true">mvn:javax.xml.soap/javax.xml.soap-api/1.4.0</bundle>
-        <bundle dependency="true">wrap:mvn:com.sun.xml.ws/jaxws-rt/2.3.2$Bundle-Name=JAX%20WS%20RI%20Runtime%20Bundle&amp;Bundle-SymbolicName=com.sun.xml.ws.jaxws-rt&amp;Bundle-Version=2.3.2</bundle>
+        <bundle dependency="true">wrap:mvn:com.sun.xml.ws/jaxws-rt/2.2.10$Bundle-Name=JAX%20WS%20RI%20Runtime%20Bundle&amp;Bundle-SymbolicName=com.sun.xml.ws.jaxws-rt&amp;Bundle-Version=2.3.2</bundle>
         <bundle dependency="true">mvn:com.sun.xml.messaging.saaj/saaj-impl/1.5.1</bundle>
         <bundle start-level="80">mvn:org.openhab.addons.bundles/org.openhab.binding.dlinksmarthome/${project.version}</bundle>
     </feature>
@@ -565,7 +566,13 @@
 
     <feature name="openhab-binding-netatmo" description="Netatmo Binding" version="${project.version}">
         <feature>openhab-runtime-base</feature>
-        <bundle start-level="80">mvn:org.openhab.binding/org.openhab.binding.netatmo/${project.version}</bundle>
+        <bundle dependency="true">wrap:mvn:org.json/json/20131018$Bundle-Name=JSON%20in%20Java&amp;Bundle-SymbolicName=org.json.json&amp;Bundle-Version=20131018</bundle>
+        <bundle dependency="true">wrap:mvn:com.squareup.okhttp/okhttp/2.3.0$Bundle-Name=OkHttp&amp;Bundle-SymbolicName=com.squareup.okhttp&amp;Bundle-Version=2.3.0</bundle>
+        <bundle dependency="true">wrap:mvn:com.squareup.okio/okio/1.3.0$Bundle-Name=Okio&amp;Bundle-SymbolicName=com.squareup.okio&amp;Bundle-Version=1.3.0</bundle>
+        <bundle dependency="true">wrap:mvn:com.squareup.retrofit/retrofit/1.9.0$Bundle-Name=Retrofit&amp;Bundle-SymbolicName=com.squareup.retrofit&amp;Bundle-Version=1.9.0</bundle>
+        <bundle dependency="true">mvn:org.apache.oltu.oauth2/org.apache.oltu.oauth2.client/1.0.0</bundle>
+        <bundle dependency="true">mvn:org.apache.oltu.oauth2/org.apache.oltu.oauth2.common/1.0.0</bundle>
+        <bundle start-level="80">mvn:org.openhab.addons.bundles/org.openhab.binding.netatmo/${project.version}</bundle>
     </feature>
 
     <feature name="openhab-binding-network" description="Network Binding" version="${project.version}">
@@ -843,11 +850,12 @@
         <feature>openhab-runtime-base</feature>
         <feature>openhab-runtime-jna</feature>
         <feature>openhab-transport-serial</feature>
+        <feature prerequisite="true">wrap</feature>
         <!-- JAXB bundles -->
-        <bundle dependency="true">mvn:javax.xml.bind/jaxb-api/2.3.1</bundle>
-        <bundle dependency="true">mvn:com.sun.xml.bind/jaxb-impl/2.3.2</bundle>
-        <bundle dependency="true">mvn:com.sun.xml.bind/jaxb-core/2.3.0</bundle>
-
+        <bundle dependency="true">wrap:mvn:javax.activation/activation/1.1.1$Bundle-Name=Javax%20Activation&amp;Bundle-SymbolicName=javax.activation.activation&amp;Bundle-Version=1.1.1</bundle>
+        <bundle dependency="true">mvn:javax.xml.bind/jaxb-api/2.2.12</bundle>
+        <bundle dependency="true">mvn:com.sun.xml.bind/jaxb-impl/2.2.11</bundle>
+        <bundle dependency="true">mvn:com.sun.xml.bind/jaxb-core/2.2.11</bundle>
         <bundle start-level="80">mvn:org.openhab.addons.bundles/org.openhab.binding.tellstick/${project.version}</bundle>
     </feature>
 
@@ -924,7 +932,7 @@
     <feature name="openhab-binding-yamahareceiver" description="Yamaha Receiver Binding" version="${project.version}">
         <feature>openhab-runtime-base</feature>
         <feature>openhab-transport-upnp</feature>
-        <bundle start-level="80">mvn:org.openhab.binding/org.openhab.binding.yamahareceiver/${project.version}</bundle>
+        <bundle start-level="80">mvn:org.openhab.addons.bundles/org.openhab.binding.yamahareceiver/${project.version}</bundle>
     </feature>
 
     <feature name="openhab-binding-yeelight" description="Yeelight Binding" version="${project.version}">
@@ -939,7 +947,8 @@
 
     <feature name="openhab-binding-zway" description="Z-Way Binding" version="${project.version}">
         <feature>openhab-runtime-base</feature>
-        <bundle start-level="80">mvn:org.openhab.binding/org.openhab.binding.zway/${project.version}</bundle>
+        <bundle dependency="true">mvn:org.apache.commons/commons-lang3/3.4</bundle>
+        <bundle start-level="80">mvn:org.openhab.addons.bundles/org.openhab.binding.zway/${project.version}</bundle>
     </feature>
 
     <!-- io -->
