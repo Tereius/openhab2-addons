@@ -14,15 +14,21 @@ package org.openhab.binding.kefls50wireless.internal;
 
 import static org.openhab.binding.kefls50wireless.internal.KefLS50WirelessBindingConstants.*;
 
+import java.io.IOException;
+
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.kefls50wireless.internal.KefLS50WirelessConfiguration;
+import org.eclipse.smarthome.core.library.types.OnOffType;
+import org.eclipse.smarthome.core.library.types.PercentType;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
+import org.eclipse.smarthome.core.thing.ThingStatusDetail;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
 import org.eclipse.smarthome.core.types.Command;
 import org.eclipse.smarthome.core.types.RefreshType;
+import org.eclipse.smarthome.core.types.UnDefType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +43,8 @@ public class KefLS50WirelessHandler extends BaseThingHandler {
 
 	private final Logger logger = LoggerFactory.getLogger(KefLS50WirelessHandler.class);
 
+	private KefLS50Client client = null;
+
 	@Nullable
 	private KefLS50WirelessConfiguration config;
 
@@ -47,18 +55,27 @@ public class KefLS50WirelessHandler extends BaseThingHandler {
 	@Override
 	public void handleCommand(ChannelUID channelUID, Command command) {
 		if (CHANNEL_VOLUME.equals(channelUID.getId())) {
-			if (command instanceof RefreshType) {
-				// TODO: handle data refresh
+			try {
+				if (command instanceof RefreshType) {
+					updateState(channelUID, new PercentType((int) client.getVol()));
+				} else if (command instanceof PercentType) {
+					client.setVol(((PercentType) command).floatValue());
+				}
+			} catch (IOException e) {
+				updateState(channelUID, UnDefType.NULL);
+				updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR);
 			}
-
-			// TODO: handle command
-
-			// Note: if communication with thing fails for some reason,
-			// indicate that by setting the status with detail information:
-			// updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
-			// "Could not control device at IP address x.x.x.x");
 		} else if (CHANNEL_MUTE.equals(channelUID.getId())) {
-
+			try {
+				if (command instanceof RefreshType) {
+					updateState(channelUID, client.isMuted() ? OnOffType.ON : OnOffType.OFF);
+				} else if (command instanceof OnOffType) {
+					client.setMuted(command.equals(OnOffType.ON));
+				}
+			} catch (IOException e) {
+				updateState(channelUID, UnDefType.NULL);
+				updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR);
+			}
 		} else if (CHANNEL_INPUT.equals(channelUID.getId())) {
 
 		} else {
@@ -70,6 +87,8 @@ public class KefLS50WirelessHandler extends BaseThingHandler {
 	public void initialize() {
 		// logger.debug("Start initializing!");
 		config = getConfigAs(KefLS50WirelessConfiguration.class);
+
+		client = new KefLS50Client(config.host);
 
 		// TODO: Initialize the handler.
 		// The framework requires you to return from this method quickly. Also, before
@@ -92,7 +111,7 @@ public class KefLS50WirelessHandler extends BaseThingHandler {
 
 		// Example for background initialization:
 		scheduler.execute(() -> {
-			boolean thingReachable = true; // <background task with long running initialization here>
+			boolean thingReachable = client.isAvailable(); // <background task with long running initialization here>
 			// when done do:
 			if (thingReachable) {
 				updateStatus(ThingStatus.ONLINE);
