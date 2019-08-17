@@ -20,11 +20,10 @@ import java.util.Set;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
-import org.openhab.binding.kefls50wireless.internal.KefLS50WirelessConfiguration;
 import org.eclipse.smarthome.core.audio.AudioFormat;
+import org.eclipse.smarthome.core.audio.AudioHTTPServer;
 import org.eclipse.smarthome.core.audio.AudioSink;
 import org.eclipse.smarthome.core.audio.AudioStream;
-import org.eclipse.smarthome.core.audio.URLAudioStream;
 import org.eclipse.smarthome.core.audio.UnsupportedAudioFormatException;
 import org.eclipse.smarthome.core.audio.UnsupportedAudioStreamException;
 import org.eclipse.smarthome.core.library.types.OnOffType;
@@ -49,141 +48,150 @@ import org.slf4j.LoggerFactory;
 @NonNullByDefault
 public class KefLS50WirelessHandler extends BaseThingHandler implements AudioSink {
 
-	private final Logger logger = LoggerFactory.getLogger(KefLS50WirelessHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(KefLS50WirelessHandler.class);
 
-	private KefLS50Client client = null;
+    @Nullable
+    private AudioHTTPServer audioServer = null;
 
-	@Nullable
-	private KefLS50WirelessConfiguration config;
+    @Nullable
+    private KefLS50Client client = null;
+    @Nullable
+    private String callbackUrl = null;
 
-	public KefLS50WirelessHandler(Thing thing) {
-		super(thing);
-	}
+    @Nullable
+    private KefLS50WirelessConfiguration config;
 
-	@Override
-	public void handleCommand(ChannelUID channelUID, Command command) {
-		if (CHANNEL_VOLUME.equals(channelUID.getId())) {
-			try {
-				if (command instanceof RefreshType) {
-					updateState(channelUID, new PercentType((int) client.getVol()));
-				} else if (command instanceof PercentType) {
-					client.setVol(((PercentType) command).floatValue());
-				}
-			} catch (IOException e) {
-				updateState(channelUID, UnDefType.NULL);
-				updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR);
-			}
-		} else if (CHANNEL_MUTE.equals(channelUID.getId())) {
-			try {
-				if (command instanceof RefreshType) {
-					updateState(channelUID, client.isMuted() ? OnOffType.ON : OnOffType.OFF);
-				} else if (command instanceof OnOffType) {
-					client.setMuted(command.equals(OnOffType.ON));
-				}
-			} catch (IOException e) {
-				updateState(channelUID, UnDefType.NULL);
-				updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR);
-			}
-		} else if (CHANNEL_INPUT.equals(channelUID.getId())) {
+    public KefLS50WirelessHandler(Thing thing, AudioHTTPServer audioHTTPServer, String callbackUrl) {
+        super(thing);
+        this.audioServer = audioHTTPServer;
+        this.callbackUrl = callbackUrl;
+    }
 
-		} else {
-			logger.warn("Can't handle unknown channel: \"" + channelUID.getId() + "\"");
-		}
-	}
+    @Override
+    public void handleCommand(ChannelUID channelUID, Command command) {
+        if (CHANNEL_VOLUME.equals(channelUID.getId())) {
+            try {
+                if (command instanceof RefreshType) {
+                    updateState(channelUID, new PercentType((int) client.getVol()));
+                } else if (command instanceof PercentType) {
+                    client.setVol(((PercentType) command).floatValue());
+                }
+            } catch (IOException e) {
+                updateState(channelUID, UnDefType.NULL);
+                updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR);
+            }
+        } else if (CHANNEL_MUTE.equals(channelUID.getId())) {
+            try {
+                if (command instanceof RefreshType) {
+                    updateState(channelUID, client.isMuted() ? OnOffType.ON : OnOffType.OFF);
+                } else if (command instanceof OnOffType) {
+                    client.setMuted(command.equals(OnOffType.ON));
+                }
+            } catch (IOException e) {
+                updateState(channelUID, UnDefType.NULL);
+                updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR);
+            }
+        } else if (CHANNEL_INPUT.equals(channelUID.getId())) {
 
-	@Override
-	public void initialize() {
-		// logger.debug("Start initializing!");
-		config = getConfigAs(KefLS50WirelessConfiguration.class);
+        } else {
+            logger.warn("Can't handle unknown channel: \"" + channelUID.getId() + "\"");
+        }
+    }
 
-		client = new KefLS50Client(config.host);
+    @Override
+    public void initialize() {
+        // logger.debug("Start initializing!");
+        config = getConfigAs(KefLS50WirelessConfiguration.class);
 
-		// TODO: Initialize the handler.
-		// The framework requires you to return from this method quickly. Also, before
-		// leaving this method a thing
-		// status from one of ONLINE, OFFLINE or UNKNOWN must be set. This might already
-		// be the real thing status in
-		// case you can decide it directly.
-		// In case you can not decide the thing status directly (e.g. for long running
-		// connection handshake using WAN
-		// access or similar) you should set status UNKNOWN here and then decide the
-		// real status asynchronously in the
-		// background.
+        client = new KefLS50Client(config.host);
 
-		// set the thing status to UNKNOWN temporarily and let the background task
-		// decide for the real status.
-		// the framework is then able to reuse the resources from the thing handler
-		// initialization.
-		// we set this upfront to reliably check status updates in unit tests.
-		updateStatus(ThingStatus.UNKNOWN);
+        // TODO: Initialize the handler.
+        // The framework requires you to return from this method quickly. Also, before
+        // leaving this method a thing
+        // status from one of ONLINE, OFFLINE or UNKNOWN must be set. This might already
+        // be the real thing status in
+        // case you can decide it directly.
+        // In case you can not decide the thing status directly (e.g. for long running
+        // connection handshake using WAN
+        // access or similar) you should set status UNKNOWN here and then decide the
+        // real status asynchronously in the
+        // background.
 
-		// Example for background initialization:
-		scheduler.execute(() -> {
-			boolean thingReachable = client.isAvailable(); // <background task with long running initialization here>
-			// when done do:
-			if (thingReachable) {
-				updateStatus(ThingStatus.ONLINE);
-			} else {
-				updateStatus(ThingStatus.OFFLINE);
-			}
-		});
+        // set the thing status to UNKNOWN temporarily and let the background task
+        // decide for the real status.
+        // the framework is then able to reuse the resources from the thing handler
+        // initialization.
+        // we set this upfront to reliably check status updates in unit tests.
+        updateStatus(ThingStatus.UNKNOWN);
 
-		// logger.debug("Finished initializing!");
+        // Example for background initialization:
+        scheduler.execute(() -> {
+            boolean thingReachable = client.isAvailable(); // <background task with long running initialization here>
+            // when done do:
+            if (thingReachable) {
+                updateStatus(ThingStatus.ONLINE);
+            } else {
+                updateStatus(ThingStatus.OFFLINE);
+            }
+        });
 
-		// Note: When initialization can NOT be done set the status with more details
-		// for further
-		// analysis. See also class ThingStatusDetail for all available status details.
-		// Add a description to give user information to understand why thing does not
-		// work as expected. E.g.
-		// updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
-		// "Can not access device as username and/or password are invalid");
-	}
+        // logger.debug("Finished initializing!");
 
-	@Override
-	public String getId() {
+        // Note: When initialization can NOT be done set the status with more details
+        // for further
+        // analysis. See also class ThingStatusDetail for all available status details.
+        // Add a description to give user information to understand why thing does not
+        // work as expected. E.g.
+        // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
+        // "Can not access device as username and/or password are invalid");
+    }
 
-		return thing.getUID().toString();
-	}
+    @Override
+    public String getId() {
 
-	@Override
-	public @Nullable String getLabel(Locale locale) {
+        return thing.getUID().toString();
+    }
 
-		return thing.getLabel();
-	}
+    @Override
+    public @Nullable String getLabel(Locale locale) {
 
-	@Override
-	public void process(@Nullable AudioStream audioStream)
-			throws UnsupportedAudioFormatException, UnsupportedAudioStreamException {
+        return thing.getLabel();
+    }
 
-		if(client != null)
-			try {
-				client.play(audioStream);
-			} catch (IOException e) {
-				throw new UnsupportedAudioFormatException("Not supported", AudioFormat.WAV);
-			}
-	}
+    @Override
+    public void process(@Nullable AudioStream audioStream)
+            throws UnsupportedAudioFormatException, UnsupportedAudioStreamException {
 
-	@Override
-	public Set<AudioFormat> getSupportedFormats() {
+        if (client != null) {
+            try {
+                client.play(audioStream, audioServer, callbackUrl);
+            } catch (IOException e) {
+                throw new UnsupportedAudioFormatException("Not supported", AudioFormat.WAV);
+            }
+        }
+    }
 
-		return KefLS50WirelessBindingConstants.SUPPORTED_AUDIO_FORMATS;
-	}
+    @Override
+    public Set<AudioFormat> getSupportedFormats() {
 
-	@Override
-	public Set<Class<? extends AudioStream>> getSupportedStreams() {
+        return KefLS50WirelessBindingConstants.SUPPORTED_AUDIO_FORMATS;
+    }
 
-		return KefLS50WirelessBindingConstants.SUPPORTED_AUDIO_STREAMS;
-	}
+    @Override
+    public Set<Class<? extends AudioStream>> getSupportedStreams() {
 
-	@Override
-	public PercentType getVolume() throws IOException {
+        return KefLS50WirelessBindingConstants.SUPPORTED_AUDIO_STREAMS;
+    }
 
-		return new PercentType((int)(client.getVol() + .5));
-	}
+    @Override
+    public PercentType getVolume() throws IOException {
 
-	@Override
-	public void setVolume(PercentType volume) throws IOException {
-		
-		client.setVol(volume.floatValue());
-	}
+        return new PercentType((int) (client.getVol() + .5));
+    }
+
+    @Override
+    public void setVolume(PercentType volume) throws IOException {
+
+        client.setVol(volume.floatValue());
+    }
 }
