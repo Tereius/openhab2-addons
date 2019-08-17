@@ -15,10 +15,18 @@ package org.openhab.binding.kefls50wireless.internal;
 import static org.openhab.binding.kefls50wireless.internal.KefLS50WirelessBindingConstants.*;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.Set;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.openhab.binding.kefls50wireless.internal.KefLS50WirelessConfiguration;
+import org.eclipse.smarthome.core.audio.AudioFormat;
+import org.eclipse.smarthome.core.audio.AudioSink;
+import org.eclipse.smarthome.core.audio.AudioStream;
+import org.eclipse.smarthome.core.audio.URLAudioStream;
+import org.eclipse.smarthome.core.audio.UnsupportedAudioFormatException;
+import org.eclipse.smarthome.core.audio.UnsupportedAudioStreamException;
 import org.eclipse.smarthome.core.library.types.OnOffType;
 import org.eclipse.smarthome.core.library.types.PercentType;
 import org.eclipse.smarthome.core.thing.ChannelUID;
@@ -39,7 +47,7 @@ import org.slf4j.LoggerFactory;
  * @author Björn Stresing - Initial contribution
  */
 @NonNullByDefault
-public class KefLS50WirelessHandler extends BaseThingHandler {
+public class KefLS50WirelessHandler extends BaseThingHandler implements AudioSink {
 
 	private final Logger logger = LoggerFactory.getLogger(KefLS50WirelessHandler.class);
 
@@ -129,5 +137,53 @@ public class KefLS50WirelessHandler extends BaseThingHandler {
 		// work as expected. E.g.
 		// updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
 		// "Can not access device as username and/or password are invalid");
+	}
+
+	@Override
+	public String getId() {
+
+		return thing.getUID().toString();
+	}
+
+	@Override
+	public @Nullable String getLabel(Locale locale) {
+
+		return thing.getLabel();
+	}
+
+	@Override
+	public void process(@Nullable AudioStream audioStream)
+			throws UnsupportedAudioFormatException, UnsupportedAudioStreamException {
+
+		if(client != null)
+			try {
+				client.play(audioStream);
+			} catch (IOException e) {
+				throw new UnsupportedAudioFormatException("Not supported", AudioFormat.WAV);
+			}
+	}
+
+	@Override
+	public Set<AudioFormat> getSupportedFormats() {
+
+		return KefLS50WirelessBindingConstants.SUPPORTED_AUDIO_FORMATS;
+	}
+
+	@Override
+	public Set<Class<? extends AudioStream>> getSupportedStreams() {
+
+		return KefLS50WirelessBindingConstants.SUPPORTED_AUDIO_STREAMS;
+	}
+
+	@Override
+	public PercentType getVolume() throws IOException {
+
+		return new PercentType((int)(client.getVol() + .5));
+	}
+
+	@Override
+	public void setVolume(PercentType volume) throws IOException {
+		
+		client.setVol(volume.floatValue());
 	}
 }

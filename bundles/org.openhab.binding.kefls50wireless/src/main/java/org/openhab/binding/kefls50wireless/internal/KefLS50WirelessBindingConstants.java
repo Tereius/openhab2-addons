@@ -14,6 +14,13 @@ package org.openhab.binding.kefls50wireless.internal;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
+import org.eclipse.smarthome.core.audio.AudioFormat;
+import org.eclipse.smarthome.core.audio.AudioStream;
+
+import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * The {@link KefLS50WirelessBindingConstants} class defines common constants, which are
@@ -26,6 +33,10 @@ public class KefLS50WirelessBindingConstants {
 
     private static final String BINDING_ID = "kefls50wireless";
 
+    public static final Set<AudioFormat> SUPPORTED_AUDIO_FORMATS = Collections
+            .unmodifiableSet(Stream.of(AudioFormat.MP3, AudioFormat.WAV).collect(Collectors.toSet()));
+    public static final Set<Class<? extends AudioStream>> SUPPORTED_AUDIO_STREAMS = Collections.singleton(AudioStream.class);
+    
     // List of all Thing Type UIDs
     public static final ThingTypeUID THING_TYPE_SAMPLE = new ThingTypeUID(BINDING_ID, "loudspeaker");
 
