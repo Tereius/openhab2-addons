@@ -1,6 +1,6 @@
 package org.openhab.binding.kefls50wireless.internal.discovery;
 
-import static org.openhab.binding.kefls50wireless.internal.KefLS50WirelessBindingConstants.THING_TYPE_SAMPLE;
+import static org.openhab.binding.kefls50wireless.internal.KefLS50WirelessBindingConstants.*;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,22 +23,21 @@ import org.osgi.service.component.annotations.Component;
 @Component(service = UpnpDiscoveryParticipant.class, immediate = true)
 public class KefLS50WirelessDiscoveryParticipant implements UpnpDiscoveryParticipant {
 
-	private static final Set<ThingTypeUID> DISCOVERABLE_THING_TYPES_UIDS = Collections.singleton(THING_TYPE_SAMPLE);
-	private static final String HOST = "Host";
-	private static final String PROPERTY_SERIAL_NUMBER = "Serial";
+    private static final Set<ThingTypeUID> DISCOVERABLE_THING_TYPES_UIDS = Collections.singleton(THING_TYPE_SAMPLE);
 
-	@Override
-	public Set<ThingTypeUID> getSupportedThingTypeUIDs() {
-		return DISCOVERABLE_THING_TYPES_UIDS;
-	}
+    @Override
+    public Set<ThingTypeUID> getSupportedThingTypeUIDs() {
+        return DISCOVERABLE_THING_TYPES_UIDS;
+    }
 
-	@Override
-	public @Nullable DiscoveryResult createResult(RemoteDevice device) {
+    @Override
+    public @Nullable DiscoveryResult createResult(RemoteDevice device) {
         ThingUID uid = getThingUID(device);
         if (uid != null) {
             Map<String, Object> properties = new HashMap<>();
-            properties.put(HOST, device.getDetails().getFriendlyName());
+            properties.put(PROPERTY_HOST, device.getDetails().getFriendlyName());
             properties.put(PROPERTY_SERIAL_NUMBER, device.getDetails().getSerialNumber());
+            properties.put(PROPERTY_UDN, device.getIdentity().getUdn().toString());
 
             DiscoveryResult result = DiscoveryResultBuilder.create(uid).withProperties(properties)
                     .withLabel(device.getDetails().getFriendlyName()).withRepresentationProperty(PROPERTY_SERIAL_NUMBER)
@@ -47,10 +46,10 @@ public class KefLS50WirelessDiscoveryParticipant implements UpnpDiscoveryPartici
         } else {
             return null;
         }
-	}
+    }
 
-	@Override
-	public @Nullable ThingUID getThingUID(RemoteDevice device) {
+    @Override
+    public @Nullable ThingUID getThingUID(RemoteDevice device) {
         DeviceDetails details = device.getDetails();
         if (details != null) {
             ModelDetails modelDetails = details.getModelDetails();
@@ -64,5 +63,5 @@ public class KefLS50WirelessDiscoveryParticipant implements UpnpDiscoveryPartici
             }
         }
         return null;
-	}
+    }
 }

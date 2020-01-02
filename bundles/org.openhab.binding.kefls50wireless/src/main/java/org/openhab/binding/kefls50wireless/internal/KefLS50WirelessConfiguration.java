@@ -23,4 +23,5 @@ public class KefLS50WirelessConfiguration {
      * Sample configuration parameter. Replace with your own.
      */
     public String host;
+    public String udn;
 }

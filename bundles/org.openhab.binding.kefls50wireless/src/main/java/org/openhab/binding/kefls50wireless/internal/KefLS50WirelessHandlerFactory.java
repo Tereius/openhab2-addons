@@ -31,6 +31,7 @@ import org.eclipse.smarthome.core.thing.ThingTypeUID;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.thing.binding.ThingHandlerFactory;
+import org.eclipse.smarthome.io.transport.upnp.UpnpIOService;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Component;
@@ -50,6 +51,7 @@ public class KefLS50WirelessHandlerFactory extends BaseThingHandlerFactory {
     private Map<String, ServiceRegistration<AudioSink>> audioSinkRegistrations = new ConcurrentHashMap<>();
     private AudioHTTPServer audioHTTPServer;
     private NetworkAddressService networkAddressService;
+    private UpnpIOService upnpIOService;
 
     /** url (scheme+server+port) to use for playing notification sounds. */
     private String callbackUrl = null;
@@ -73,7 +75,8 @@ public class KefLS50WirelessHandlerFactory extends BaseThingHandlerFactory {
         if (THING_TYPE_SAMPLE.equals(thingTypeUID)) {
 
             String callbackUrl = createCallbackUrl();
-            KefLS50WirelessHandler handler = new KefLS50WirelessHandler(thing, audioHTTPServer, callbackUrl);
+            KefLS50WirelessHandler handler = new KefLS50WirelessHandler(thing, audioHTTPServer, upnpIOService,
+                    callbackUrl);
 
             @SuppressWarnings("unchecked")
             ServiceRegistration<AudioSink> reg = (ServiceRegistration<AudioSink>) bundleContext
@@ -113,6 +116,15 @@ public class KefLS50WirelessHandlerFactory extends BaseThingHandlerFactory {
 
     protected void unsetNetworkAddressService(NetworkAddressService networkAddressService) {
         this.networkAddressService = null;
+    }
+
+    @Reference
+    protected void setUpnpIOService(UpnpIOService upnpIOService) {
+        this.upnpIOService = upnpIOService;
+    }
+
+    protected void unsetUpnpIOService(UpnpIOService upnpIOService) {
+        this.upnpIOService = null;
     }
 
     private String createCallbackUrl() {

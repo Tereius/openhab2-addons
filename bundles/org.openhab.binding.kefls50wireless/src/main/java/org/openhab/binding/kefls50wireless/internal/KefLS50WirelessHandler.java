@@ -28,6 +28,7 @@ import org.eclipse.smarthome.core.audio.UnsupportedAudioFormatException;
 import org.eclipse.smarthome.core.audio.UnsupportedAudioStreamException;
 import org.eclipse.smarthome.core.library.types.OnOffType;
 import org.eclipse.smarthome.core.library.types.PercentType;
+import org.eclipse.smarthome.core.library.types.StringType;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
@@ -36,6 +37,9 @@ import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
 import org.eclipse.smarthome.core.types.Command;
 import org.eclipse.smarthome.core.types.RefreshType;
 import org.eclipse.smarthome.core.types.UnDefType;
+import org.eclipse.smarthome.io.transport.upnp.UpnpIOParticipant;
+import org.eclipse.smarthome.io.transport.upnp.UpnpIOService;
+import org.openhab.binding.kefls50wireless.internal.KefLS50Client.Input;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * @author Björn Stresing - Initial contribution
  */
 @NonNullByDefault
-public class KefLS50WirelessHandler extends BaseThingHandler implements AudioSink {
+public class KefLS50WirelessHandler extends BaseThingHandler implements AudioSink, UpnpIOParticipant {
 
     private final Logger logger = LoggerFactory.getLogger(KefLS50WirelessHandler.class);
 
@@ -61,10 +65,15 @@ public class KefLS50WirelessHandler extends BaseThingHandler implements AudioSin
     @Nullable
     private KefLS50WirelessConfiguration config;
 
-    public KefLS50WirelessHandler(Thing thing, AudioHTTPServer audioHTTPServer, String callbackUrl) {
+    @Nullable
+    private UpnpIOService upnpIOService;
+
+    public KefLS50WirelessHandler(Thing thing, AudioHTTPServer audioHTTPServer, UpnpIOService upnpIOService,
+            String callbackUrl) {
         super(thing);
         this.audioServer = audioHTTPServer;
         this.callbackUrl = callbackUrl;
+        this.upnpIOService = upnpIOService;
     }
 
     @Override
@@ -73,8 +82,10 @@ public class KefLS50WirelessHandler extends BaseThingHandler implements AudioSin
             try {
                 if (command instanceof RefreshType) {
                     updateState(channelUID, new PercentType((int) client.getVol()));
+                    updateStatus(ThingStatus.ONLINE);
                 } else if (command instanceof PercentType) {
                     client.setVol(((PercentType) command).floatValue());
+                    updateStatus(ThingStatus.ONLINE);
                 }
             } catch (IOException e) {
                 updateState(channelUID, UnDefType.NULL);
@@ -84,15 +95,30 @@ public class KefLS50WirelessHandler extends BaseThingHandler implements AudioSin
             try {
                 if (command instanceof RefreshType) {
                     updateState(channelUID, client.isMuted() ? OnOffType.ON : OnOffType.OFF);
+                    updateStatus(ThingStatus.ONLINE);
                 } else if (command instanceof OnOffType) {
                     client.setMuted(command.equals(OnOffType.ON));
+                    updateStatus(ThingStatus.ONLINE);
                 }
             } catch (IOException e) {
                 updateState(channelUID, UnDefType.NULL);
                 updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR);
             }
         } else if (CHANNEL_INPUT.equals(channelUID.getId())) {
-
+            try {
+                if (command instanceof RefreshType) {
+                    Input input = client.getInput();
+                    updateState(channelUID, new StringType(input.toString()));
+                    updateStatus(ThingStatus.ONLINE);
+                } else if (command instanceof StringType) {
+                    client.setInput(Input.valueOf(command.toString()));
+                    updateState(channelUID, new StringType(command.toString()));
+                    updateStatus(ThingStatus.ONLINE);
+                }
+            } catch (IOException e) {
+                updateState(channelUID, UnDefType.NULL);
+                updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR);
+            }
         } else {
             logger.warn("Can't handle unknown channel: \"" + channelUID.getId() + "\"");
         }
@@ -133,6 +159,8 @@ public class KefLS50WirelessHandler extends BaseThingHandler implements AudioSin
             } else {
                 updateStatus(ThingStatus.OFFLINE);
             }
+
+            upnpIOService.addSubscription(this, "urn:schemas-upnp-org:service:AVTransport:1", 99999);
         });
 
         // logger.debug("Finished initializing!");
@@ -153,7 +181,7 @@ public class KefLS50WirelessHandler extends BaseThingHandler implements AudioSin
     }
 
     @Override
-    public @Nullable String getLabel(Locale locale) {
+    public @Nullable String getLabel(@Nullable Locale locale) {
 
         return thing.getLabel();
     }
@@ -162,11 +190,13 @@ public class KefLS50WirelessHandler extends BaseThingHandler implements AudioSin
     public void process(@Nullable AudioStream audioStream)
             throws UnsupportedAudioFormatException, UnsupportedAudioStreamException {
 
-        if (client != null) {
+        if (audioStream != null) {
             try {
+                client.setInput(Input.NETWORK);
                 client.play(audioStream, audioServer, callbackUrl);
+                client.getMediaInfo();
             } catch (IOException e) {
-                throw new UnsupportedAudioFormatException("Not supported", AudioFormat.WAV);
+                updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR);
             }
         }
     }
@@ -193,5 +223,27 @@ public class KefLS50WirelessHandler extends BaseThingHandler implements AudioSin
     public void setVolume(PercentType volume) throws IOException {
 
         client.setVol(volume.floatValue());
+    }
+
+    @Override
+    public String getUDN() {
+
+        return thing.getProperties().get(PROPERTY_UDN);
+    }
+
+    @Override
+    public void onValueReceived(@Nullable String variable, @Nullable String value, @Nullable String service) {
+
+        logger.warn("test");
+    }
+
+    @Override
+    public void onServiceSubscribed(@Nullable String service, boolean succeeded) {
+        logger.warn("test");
+    }
+
+    @Override
+    public void onStatusChanged(boolean status) {
+        logger.warn("test");
     }
 }

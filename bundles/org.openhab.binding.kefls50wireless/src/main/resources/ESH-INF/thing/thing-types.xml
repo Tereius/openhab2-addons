@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
 
 	<thing-type id="loudspeaker">
-	
+
 		<label>KefLS50Wireless Loudspeaker Binding</label>
 		<description>Controls the volume and audio input of KEFs LS50 Wireless</description>
 		<category>Speaker</category>
@@ -13,6 +13,7 @@
 		<channels>
 			<channel id="volume" typeId="system.volume" />
 			<channel id="mute" typeId="system.mute" />
+			<channel id="control" typeId="system.media-control" />
 			<channel id="input" typeId="input" />
 		</channels>
 
@@ -22,13 +23,22 @@
 				<description>The hostname or IP address of the loudspeaker</description>
 			</parameter>
 		</config-description>
-		
+
 	</thing-type>
-	
+
 	<channel-type id="input">
 		<item-type>String</item-type>
 		<label>Audio input</label>
 		<description>The label/name of the current audio input</description>
+		<state>
+			<options>
+				<option value="NETWORK">Network</option>
+				<option value="BLUETOOTH">Bluetooth</option>
+				<option value="AUX">Aux</option>
+				<option value="OPTICAL">Optical</option>
+				<option value="USB">Usb</option>
+			</options>
+		</state>
 	</channel-type>
 
 </thing:thing-descriptions>
