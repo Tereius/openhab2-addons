@@ -74,6 +74,7 @@
 /bundles/org.openhab.binding.irtrans/ @kgoderis
 /bundles/org.openhab.binding.jeelink/ @vbier
 /bundles/org.openhab.binding.keba/ @kgoderis
+/bundles/org.openhab.binding.kefls50wireless/ @Tereius
 /bundles/org.openhab.binding.km200/ @Markinus
 /bundles/org.openhab.binding.knx/ @sjka
 /bundles/org.openhab.binding.kodi/ @pail23 @cweitkamp
